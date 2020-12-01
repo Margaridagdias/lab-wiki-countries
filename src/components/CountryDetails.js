@@ -1,86 +1,60 @@
-import React from 'react'
+import React from 'react';
+import countriesJSON from '../countries.json';
+import { Link } from 'react-router-dom';
 
 class CountryDetails extends React.Component {
     state = {
-        {this.state.common.name}:'',
-        {this.state.status}:'',
-        {this.state.currency}:''
+        name: '',
+        capital: '',
+        area: '',
+        borders: [] 
     }
 
     componentDidMount() {
-        //Going to get the project id from the URL.
-        let countriesId = this.props.match.params.cca3;
+       this.getCountryDetail();
+    }
 
-        //Going to find the project inside my projets array
-        //using the id that comes from the URL
-        console.log('id coming from the url', projectId)
-        let foundProject = myProjects.find((project) => {
-            return project.id === projectId;
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps !== this.props) {
+            //This means that the url changed
+            this.getCountryDetail();
+        }
+    }
+
+    getCountryDetail = () => {
+        const countryCCA3 = this.props.match.params.cca3;
+        const foundCountry = countriesJSON.find((country) => {
+            return country.cca3 === countryCCA3;
         })
-
         this.setState({
-            name: foundProject.name,
-            tecnologies: foundProject.technologies,
-            year:  foundProject.year,
-            description: foundProject.description
+            name: foundCountry.name.common,
+            capital: foundCountry.capital[0],
+            area: foundCountry.area,
+            borders: foundCountry.borders
         })
-    } 
-
+    }
 
     render() {
-        return (
+        return(
             <div>
-            <h3>Project Detail: {this.state.name} </h3>
-            <p>Tecnologies: {this.state.tecnologies}</p>
-            <p>Year: {this.state.year}</p>
-            <p>Description: {this.state.description}</p>
-        
+                <h2>{this.state.name}</h2>
+                <h3>Capital: {this.state.capital}</h3>
+                <p>Area: {this.state.area} km<sup>2</sup></p>
+                <ul>
+                    {this.state.borders.map((border) => {
+                        return (
+                            <li>
+                                <Link exact to={`/${border}`}>
+                                    {border}
+                                </Link>
+                            </li>
+                        )
+                    })}
+                </ul>
             </div>
         )
     }
-}
-
-export default CountryDetails
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default CountryDetails;
